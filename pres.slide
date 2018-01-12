@@ -1,0 +1,119 @@
+Autonom båt
+Hitta den kortaste vägen och undvika objekt
+15:04 19 Dec 2017
+Tags: foo, bar, baz
+
+Jesper Vesterberg
+Nästan Civilingenjör
+jumziey@gmail.com
+
+
+* Bakgrund - Dockstavarvet
+- Radio styrning
+- Sensorer
+- Autonomt ta beslut: _Kortaste_ _väg_ , _Undvika_ _objekt_, _Sjöfarts_ _regler_
+.image images/autobat.svg 324 637 
+
+* Klassisk kortaste väg
+- Dijkstra / A*
+- Grafer, noder o kanter
+.image images/graph-weighted.png 350 _
+
+* Passar vägsystem
+.image images/graph-weighted-map.png 450 _
+Kostnaden att traversera kanter kan bero på hastighetsbegränsingar och väglängd
+
+* Dijkstras algoritm
+- Edsger Dijkstra 1959
+- Utvecklad för att vara så enkel att "non-computing people" kan förstå
+- Grunden för kortaste väg beräkningar
+- Baserat på att endast gå till noder som är så nära som möjligt
+.image images/dijkstra.jpg 300 300
+
+
+* Dijkstra - exempel
+- Vars vill vi?
+.image images/graph-weighted-dijkstra-1.png 450 _
+
+
+* Dijkstra - exempel
+- Då börjar vi gå då!
+.image images/graph-weighted-dijkstra-2.png 450 _
+
+* Dijkstra - exempel
+- Vi fortsätter vid den nod som tagit oss minst antal steg att nå
+.image images/graph-weighted-dijkstra-3.png 450 _
+
+* Dijkstra - exempel
+- Och så loopar vi...
+.image images/graph-weighted-dijkstra-4.png 450 _
+
+* Dijkstra - exempel
+- Så har vi vår kortaste väg
+.image images/graph-weighted-dijkstra-5.png 450 _
+
+* A* - Heuristik istället för distanser från start
+- Nils Nilsson, Peter E. Hart, Betram Raphael 1968 (Dessa algoritmer har funnits ett tag)
+- En "känsla" av vars slut destinationen ligger
+- Heuristisk = <distansen till en nod> +  <Estimerat distans från nod till mål>
+- Heuristiska istället för distans från start.
+.image images/heuristic.jpg 350 500
+
+* Rutnät! - Specialfall av grafer	
+.image images/graph-grid.png 400 _
+Varje nod blir en ruta i rutnätet
+(Efter detta kommer visualiseringar, don't worry, be happy)
+
+
+* A* vs Dijkstra 
+.video vids/short-path-simple.ogv video/ogg _ 1000
+
+* Dijkstra vs A* 
+.video vids/short-path-obst.ogv video/ogg _ 1000
+
+* Tyvärr :(  
+.image images/street-vs-sea.png _ 1000
+
+* Meshes to the rescue!
+- Navigations Meshes - Trianglar som definerar farbart vatten
+.image images/navmesh.png 400 _
+
+
+* Kortaste väg på Mesh
+- Polyanya - Michael L. Cui, Daniel D. Harabor, Alban Grastien - 2017
+- A* rakt av! Det enda vi _egentligen_ förändrar är vad en nod är och hur vi går till nästa nod (Med andra ord så förändrar vi allt)
+.image images/mesh-angle.jpg
+
+* Nod
+- Rot
+- Intervall
+- Heuristiken
+.image images/node.png 400 _
+
+* Uppdatering
+- Nästa triangels kanter - Nytt intervall
+- Byt rot om roten inte kan se det nya intervallet
+.image images/node-update.png 400 _
+
+* Projektion
+.image images/update.png 380 _
+Notering: navigations meshen definierar allt vi kan se
+
+* Slutresultat
+- Optimalt, förutsägbart
+.image images/path.png 400 _
+Notering: Bild tagen från fungerade mjukvara ;) 
+
+* Vad är kvar?
+- Hantera saker som sensorer läser in
+- Sjöfartsregler o god sed
+
+Modifiera navigations meshen!
+
+* Extra hinder
+.image images/ice-berg.png 500 _
+
+* Sjöfartsregler, t.ex. högerregeln
+.image images/boat-meet.png 500 _
+- Man måste även modellera vars mötande båt kommer infinna sig vid mötet
+- Olika estimeringar för båt, färja, vattenskoter m.m.
